@@ -7,10 +7,50 @@ Variáveis:
 4. winning_trades
 5. stop_loss
 6. take_profit
+7. win_rate
 
 
 Classes:
 1. Trade
 2. Backtest
+3. Data
 
+Trade:
+	Variáveis:
+	1. prices
+	
+	
+	Métodos:
+	1. buy
+	2. sell
+	3. profit ($)
+	4. profit (%)
+	
+Backtest:
+	Variáveis:
+	1. Strategy (a variável vai ser uma função que manda um buy or sell signal através de True ou False. Se strategy(x) = True, quero criar uma lista que tenha as flutuações 
+			de preço de fecho)
+	2. Data
+	
+	Métodos:
+	1. closes
+	
+	
+Portfolio:
+	Variáveis:
+	
 
+	Métodos:
+	1. LogRet
+	2. LogReturns
+	3. AvgLogReturns
+	4. AnnLogReturns
+	5. AnnVol
+	6. Sharpe
+	7. DownDev
+	8. Sortino
+	9. MaxDrawdown
+	10. Calmar
+	11. Skewness
+	12. Kurtosis
+	
