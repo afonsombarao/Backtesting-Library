@@ -54,3 +54,12 @@ class Backtest:
                 a.append(self.closes()[i])
             i+=1
         return Trades
+        
+    def num_trades(self):
+        return len(self.backtest())
+
+    def winning_trades(self):
+        return len([1 for i in self.backtest() if i.profit() > 0])
+
+    def win_rate(self):
+        return self.winning_trades()/self.num_trades
