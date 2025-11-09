@@ -27,3 +27,18 @@ class Backtest:
 
     def closes(self):
         return self.data['Close'].to_numpy()
+        
+    def present(self,n):
+        return self.data.head(n)  
+    
+    def backtest(self):
+        Trades = [] # lista onde vou guardar os objetos da classe Trade
+        hold = False # se estou no modo hold ou nao
+        i=0
+        while i <= len(self.closes()): # iterar a função strategy sobre o closes
+            if strategy(data.present(i),hold) and hold == False:
+                a = Trade([self.closes()[i]])
+                Trades.append(a)
+            elif strategy(i,hold) == False and hold == True:
+                pass
+            i+=1
