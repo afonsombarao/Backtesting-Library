@@ -19,8 +19,8 @@ class Trade:
 
     def profit_perc(self):
         return self.profit()/self.buy()
-    
-    def prices_append(self, price):
+
+    def append_price(self, price):
         return self.prices.append(price)
 
 class Backtest:
@@ -39,9 +39,18 @@ class Backtest:
         hold = False # se estou no modo hold ou nao
         i=0
         while i <= len(self.closes()): # iterar a função strategy sobre o closes
-            if strategy(data.present(i),hold) and hold == False:
+            
+            if strategy(data.present(i),hold) == True and hold == False: # se não estiver com o asset e o buySignal for True, 
                 a = Trade([self.closes()[i]])
                 Trades.append(a)
-            elif strategy(i,hold) == False and hold == True:
+
+            elif strategy(data.present(i),hold) == False and hold == False:
                 pass
+            
+            elif strategy(data.present(i),hold) == False and hold == True:
+                a.append(self.closes()[i])
+            
+            elif strategy(data.present(i),hold) == True and hold == True:
+                a.append(self.closes()[i])
             i+=1
+        return Trades
