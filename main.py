@@ -19,6 +19,9 @@ class Trade:
 
     def profit_perc(self):
         return self.profit()/self.buy()
+    
+    def prices_append(self, price):
+        return self.prices.append(price)
 
 class Backtest:
     def __init__(self, strategy, data):
