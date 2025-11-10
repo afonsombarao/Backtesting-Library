@@ -24,19 +24,6 @@ class Trade:
         return self.prices.append(price)
 
 class Backtest:
-    def __init__(self, strategy, data):
-        self.data = data
-        self.strategy = strategy
-
-    #trasnformar os closes do df data num array np
-    def closes(self):
-        list = self.data['Close'].to_numpy().tolist()
-        return [x[0] for x in list]
-    
-    def present(self,n):
-        return self.data.head(n+1) 
-    
-    class Backtest:
     def __init__(self, strategy, data, trades=[]):
         self.data = data
         self.strategy = strategy
