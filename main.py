@@ -28,33 +28,37 @@ class Backtest:
         self.data = data
         self.strategy = strategy
 
+    #trasnformar os closes do df data num array np
     def closes(self):
-        return self.data['Close'].to_numpy()
-        
+        list = self.data['Close'].to_numpy().tolist()
+        return [x[0] for x in list]
+    
     def present(self,n):
-        return self.data.head(n)  
+        return self.data.head(n+1) 
     
     def backtest(self):
         Trades = [] # lista onde vou guardar os objetos da classe Trade
         hold = False # se estou no modo hold ou nao
-        i=0
-        while i <= len(self.closes()): # iterar a função strategy sobre o closes
-            
-            if strategy(data.present(i),hold) == True and hold == False: # se não estiver com o asset e o buySignal for True, 
+        for i, _ in enumerate(self.closes()):
+            s = self.strategy(self.present(i), hold)
+
+            if s and not hold: # buy signal == True
                 a = Trade([self.closes()[i]])
                 Trades.append(a)
-
-            elif strategy(data.present(i),hold) == False and hold == False:
-                pass
+                hold = True
+                
+            elif not s and not hold: # buy signal == False
+                continue
+                
+            elif not s and hold: # caso sell signal == False
+                a.append_price(self.closes()[i])
             
-            elif strategy(data.present(i),hold) == False and hold == True:
-                a.append(self.closes()[i])
+            else: # sell signal == True
+                a.append_price(self.closes()[i])
+                hold = False
             
-            elif strategy(data.present(i),hold) == True and hold == True:
-                a.append(self.closes()[i])
-            i+=1
         return Trades
-        
+
     def num_trades(self):
         return len(self.backtest())
 
@@ -62,4 +66,18 @@ class Backtest:
         return len([1 for i in self.backtest() if i.profit() > 0])
 
     def win_rate(self):
-        return self.winning_trades()/self.num_trades
+        return self.winning_trades()/self.num_trades()
+        
+# Algumas estratégias que eu implementei para experimentar:
+
+def strategy1(data, hold):
+    if hold:
+        return data.iloc[-1,0].item() > 170 
+    else:
+        return data.iloc[-1,0].item() < 140
+
+def strategy2(data, hold):
+    if not hold:
+        return len(data)%10 == 0
+    else:
+        return (len(data)-5)%10 == 0
