@@ -36,15 +36,28 @@ class Backtest:
     def present(self,n):
         return self.data.head(n+1) 
     
+    class Backtest:
+    def __init__(self, strategy, data, trades=[]):
+        self.data = data
+        self.strategy = strategy
+        self.trades = trades
+
+    #trasnformar os closes do df data num array np
+    def closes(self):
+        list = self.data['Close'].to_numpy().tolist()
+        return [x[0] for x in list]
+    
+    def present(self,n):
+        return self.data.head(n+1) 
+    
     def backtest(self):
-        Trades = [] # lista onde vou guardar os objetos da classe Trade
         hold = False # se estou no modo hold ou nao
         for i, _ in enumerate(self.closes()):
             s = self.strategy(self.present(i), hold)
 
             if s and not hold: # buy signal == True
                 a = Trade([self.closes()[i]])
-                Trades.append(a)
+                self.trades.append(a)
                 hold = True
                 
             elif not s and not hold: # buy signal == False
@@ -57,13 +70,13 @@ class Backtest:
                 a.append_price(self.closes()[i])
                 hold = False
             
-        return Trades
+        return self.trades
 
     def num_trades(self):
-        return len(self.backtest())
+        return len(self.trades)
 
     def winning_trades(self):
-        return len([1 for i in self.backtest() if i.profit() > 0])
+        return len([1 for i in self.trades if i.profit() > 0])
 
     def win_rate(self):
         return self.winning_trades()/self.num_trades()
